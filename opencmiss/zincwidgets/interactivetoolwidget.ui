@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>InteractiveToolWidget</class>
+ <widget class="QWidget" name="InteractiveToolWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>200</width>
+    <height>184</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="Line" name="line">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>120</y>
+     <width>181</width>
+     <height>16</height>
+    </rect>
+   </property>
+   <property name="orientation">
+    <enum>Qt::Horizontal</enum>
+   </property>
+  </widget>
+  <widget class="QLabel" name="nodeLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>62</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Nodes</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="nodeSelectionWidget" native="true">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>30</y>
+     <width>181</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <widget class="QCheckBox" name="enableSelection">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>94</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Select</string>
+    </property>
+    <property name="checked">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="enableEdit">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>94</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Edit</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="enableCreate">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>40</y>
+      <width>94</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Create</string>
+    </property>
+   </widget>
+   <widget class="QCheckBox" name="enableConstrain">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>161</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Constrain to surfaces</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QLabel" name="elementLabel">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>130</y>
+     <width>62</width>
+     <height>17</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Elements</string>
+   </property>
+   <property name="indent">
+    <number>0</number>
+   </property>
+  </widget>
+  <widget class="QCheckBox" name="elementSelection">
+   <property name="geometry">
+    <rect>
+     <x>20</x>
+     <y>150</y>
+     <width>94</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Select</string>
+   </property>
+   <property name="checked">
+    <bool>false</bool>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>enableSelection</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>InteractiveToolWidget</receiver>
+   <slot>enableSelectionToggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>69</x>
+     <y>40</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>220</x>
+     <y>40</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableEdit</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>InteractiveToolWidget</receiver>
+   <slot>enableEditToggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>77</x>
+     <y>63</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>260</x>
+     <y>66</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableCreate</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>InteractiveToolWidget</receiver>
+   <slot>enableCreateToggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>95</x>
+     <y>82</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>234</x>
+     <y>82</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>enableConstrain</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>InteractiveToolWidget</receiver>
+   <slot>enableConstrainToggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>152</x>
+     <y>99</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>203</x>
+     <y>98</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>elementSelection</sender>
+   <signal>stateChanged(int)</signal>
+   <receiver>InteractiveToolWidget</receiver>
+   <slot>elementSelectionToggle()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>72</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>207</x>
+     <y>162</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>enableSelectionToggle()</slot>
+  <slot>enableEditToggle()</slot>
+  <slot>enableCreateToggle()</slot>
+  <slot>enableConstrainToggle()</slot>
+  <slot>lineSelectionToggle()</slot>
+  <slot>surfacesSelectionToggle()</slot>
+  <slot>elementSelectionToggle()</slot>
+ </slots>
+</ui>
