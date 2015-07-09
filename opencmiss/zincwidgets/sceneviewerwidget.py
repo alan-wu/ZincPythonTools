@@ -29,7 +29,24 @@ from opencmiss.zinc.scenecoordinatesystem import \
 from opencmiss.zinc.field import Field
 from opencmiss.zinc.glyph import Glyph
 from opencmiss.zinc.status import OK
-from interactivetoolwidget import InteractiveToolWidget
+
+# mapping from qt to zinc start
+# Create a button map of Qt mouse buttons to Zinc input buttons
+button_map = {QtCore.Qt.LeftButton: Sceneviewerinput.BUTTON_TYPE_LEFT,
+              QtCore.Qt.MidButton: Sceneviewerinput.BUTTON_TYPE_MIDDLE,
+              QtCore.Qt.RightButton: Sceneviewerinput.BUTTON_TYPE_RIGHT}
+
+# Create a modifier map of Qt modifier keys to Zinc modifier keys
+def modifier_map(qt_modifiers):
+    '''
+    Return a Zinc SceneViewerInput modifiers object that is created from
+    the Qt modifier flags passed in.
+    '''
+    modifiers = Sceneviewerinput.MODIFIER_FLAG_NONE
+    if qt_modifiers & QtCore.Qt.SHIFT:
+        modifiers = modifiers | Sceneviewerinput.MODIFIER_FLAG_SHIFT
+
+    return modifiers
 
 # projectionMode start
 class ProjectionMode(object):
@@ -62,9 +79,7 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         # Create a Zinc context from which all other objects can be derived either directly or indirectly.
         self._context = None
         self._sceneviewer = None
-
-        # interactiveTool attributes
-        self._interactivetoolwidget = InteractiveToolWidget(self)
+        self._ignore_mouse_events = False
         # init end
 
     def setContext(self, context):
@@ -85,6 +100,9 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         Get the scene viewer for this ZincWidget.
         '''
         return self._sceneviewer
+    
+    def setIgnoreMouseEvents(self, value):
+        self._ignore_mouse_events = value
     
 
     # initializeGL start
@@ -119,9 +137,6 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
             self._selectionGroup = fieldmodule.createFieldGroup()
             scene.setSelectionField(self._selectionGroup)
 
-            self._scenepicker = scene.createScenepicker()
-            self._scenepicker.setScenefilter(graphics_filter)
-
             # Set up unproject pipeline
             self._window_coords_from = fieldmodule.createFieldConstant([0, 0, 0])
             self._global_coords_from = fieldmodule.createFieldConstant([0, 0, 0])
@@ -131,7 +146,6 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
     #         unproject_t = fieldmodule.createFieldTranspose(4, unproject)
             self._global_coords_to = fieldmodule.createFieldProjection(self._window_coords_from, unproject)
             self._window_coords_to = fieldmodule.createFieldProjection(self._global_coords_from, project)
-            self._interactivetoolwidget.setSceneviewer(self._sceneviewer)
 
             self._sceneviewer.viewAll()
 
@@ -269,14 +283,33 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         Inform the scene viewer of a mouse press event.
         '''
         event.accept()
-        self._interactivetoolwidget.proceedSceneViewerMousePressEvent(event)
+        if not self._ignore_mouse_events and not event.modifiers() or (event.modifiers() & self._selectionModifier and button_map[event.button()] == Sceneviewerinput.BUTTON_TYPE_RIGHT):
+            scene_input = self._sceneviewer.createSceneviewerinput()
+            scene_input.setPosition(event.x(), event.y())
+            scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_PRESS)
+            scene_input.setButtonType(button_map[event.button()])
+            scene_input.setModifierFlags(modifier_map(event.modifiers()))
+
+            self._sceneviewer.processSceneviewerinput(scene_input)
+
+            self._handle_mouse_events = True
+        else:
+            event.ignore()
 
     def mouseReleaseEvent(self, event):
         '''
         Inform the scene viewer of a mouse release event.
         '''
         event.accept()
-        self._interactivetoolwidget.proceedSceneViewerMouseReleaseEvent(event)
+        if not self._ignore_mouse_events and self._handle_mouse_events:
+            scene_input = self._sceneviewer.createSceneviewerinput()
+            scene_input.setPosition(event.x(), event.y())
+            scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_BUTTON_RELEASE)
+            scene_input.setButtonType(button_map[event.button()])
+
+            self._sceneviewer.processSceneviewerinput(scene_input)
+        else:
+            event.ignore()
 
     def mouseMoveEvent(self, event):
         '''
@@ -284,4 +317,12 @@ class SceneviewerWidget(QtOpenGL.QGLWidget):
         change to the viewport.
         '''
         event.accept()
-        self._interactivetoolwidget.proceedSceneViewerMouseMoveEvent(event)
+        if not self._ignore_mouse_events and self._handle_mouse_events:
+            scene_input = self._sceneviewer.createSceneviewerinput()
+            scene_input.setPosition(event.x(), event.y())
+            scene_input.setEventType(Sceneviewerinput.EVENT_TYPE_MOTION_NOTIFY)
+            if event.type() == QtCore.QEvent.Leave:
+                scene_input.setPosition(-1, -1)
+            self._sceneviewer.processSceneviewerinput(scene_input)
+        else:
+            event.ignore()

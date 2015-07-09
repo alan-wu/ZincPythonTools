@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>InteractiveToolWidget</class>
- <widget class="QWidget" name="InteractiveToolWidget">
+ <class>EditSceneviewerWidgetDlg</class>
+ <widget class="QWidget" name="EditSceneviewerWidgetDlg">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -39,7 +39,7 @@
     <string>Nodes</string>
    </property>
   </widget>
-  <widget class="QWidget" name="nodeSelectionWidget" native="true">
+  <widget class="QWidget" name="ControlnWidget" native="true">
    <property name="enabled">
     <bool>true</bool>
    </property>
@@ -145,7 +145,7 @@
   <connection>
    <sender>enableSelection</sender>
    <signal>stateChanged(int)</signal>
-   <receiver>InteractiveToolWidget</receiver>
+   <receiver>EditSceneviewerWidgetDlg</receiver>
    <slot>enableSelectionToggle()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -161,7 +161,7 @@
   <connection>
    <sender>enableEdit</sender>
    <signal>stateChanged(int)</signal>
-   <receiver>InteractiveToolWidget</receiver>
+   <receiver>EditSceneviewerWidgetDlg</receiver>
    <slot>enableEditToggle()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -177,7 +177,7 @@
   <connection>
    <sender>enableCreate</sender>
    <signal>stateChanged(int)</signal>
-   <receiver>InteractiveToolWidget</receiver>
+   <receiver>EditSceneviewerWidgetDlg</receiver>
    <slot>enableCreateToggle()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -193,7 +193,7 @@
   <connection>
    <sender>enableConstrain</sender>
    <signal>stateChanged(int)</signal>
-   <receiver>InteractiveToolWidget</receiver>
+   <receiver>EditSceneviewerWidgetDlg</receiver>
    <slot>enableConstrainToggle()</slot>
    <hints>
     <hint type="sourcelabel">
@@ -209,7 +209,7 @@
   <connection>
    <sender>elementSelection</sender>
    <signal>stateChanged(int)</signal>
-   <receiver>InteractiveToolWidget</receiver>
+   <receiver>EditSceneviewerWidgetDlg</receiver>
    <slot>elementSelectionToggle()</slot>
    <hints>
     <hint type="sourcelabel">
